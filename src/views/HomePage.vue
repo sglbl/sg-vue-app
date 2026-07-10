@@ -7,14 +7,29 @@
     <p>Pick a page to work on:</p>
 
     <div class="cards">
-      <router-link to="/socks" class="card">
-        <h2>Socks — Lesson 1</h2>
+      <router-link to="/lesson1" class="card">
+        <h2>Lesson 1</h2>
         <p>Ref + mustache binding.</p>
       </router-link>
 
+      <router-link to="/lesson2" class="card">
+        <h2>Lesson 2</h2>
+        <p>Image + v-bind</p>
+      </router-link>
+
+      <router-link to="/lesson3" class="card">
+        <h2>Lesson 3</h2>
+        <p>Image + v-bind</p>
+      </router-link>
+
+      <router-link to="/lesson4" class="card">
+        <h2>Lesson 4</h2>
+        <p>Image + v-bind</p>
+      </router-link>
+
       <router-link to="/next-lesson" class="card">
-        <h2>Next Lesson</h2>
-        <p>Coming up in the tutorial.</p>
+        <h2>Next lesson</h2>
+        <p>Trial</p>
       </router-link>
     </div>
   </main>
