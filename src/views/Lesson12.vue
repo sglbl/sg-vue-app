@@ -15,5 +15,5 @@ const updateCart = (id: number) => {
 <template>
   <TopBar />
   <div class="cart">Cart({{ cart.length }})</div>
-  <ProductDisplay :premium="premium" @add-to-cart="updateCart"></ProductDisplay>
+  <ProductDisplay :premium="premium" :show-reviews="true" @add-to-cart="updateCart"></ProductDisplay>
 </template>

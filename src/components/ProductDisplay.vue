@@ -11,6 +11,10 @@ const props = defineProps({
     premium: {
         type: Boolean,
         required: true
+    },
+    showReviews: {
+      type: Boolean,
+      default: false // defaults to false if parent doesn't pass it
     }
 })
 
@@ -107,7 +111,9 @@ const activeClassForButton = true
       </div>
     </div>
     <!-- <ReviewList v-if="reviews.length > 0" :reviews="reviews"></ReviewList> -->
-    <ReviewList v-if="reviewsStore.reviews.length > 0" :reviews="reviewsStore.reviews"></ReviewList>
-    <ReviewForm @review-submitted="addReview"></ReviewForm>
-  </div>
+    <template v-if="props.showReviews">
+      <ReviewList v-if="reviewsStore.reviews.length > 0" :reviews="reviewsStore.reviews"></ReviewList>
+      <ReviewForm @review-submitted="addReview"></ReviewForm>
+    </template>
+    </div>
 </template>
