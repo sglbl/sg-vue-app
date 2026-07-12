@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import socksGreenImage from '../assets/images/socks_green.jpeg'
+import greenSocksImage from '../assets/images/socks_green.jpeg'
+import blueSocksImage from '../assets/images/socks_blue.jpeg'
+
 const product = ref("Socks")
-const image = ref(socksGreenImage)
+const image = ref(greenSocksImage)
 const alt = ref('Message')
 const inStock = ref(true)
 const inventory = ref(10)
@@ -10,14 +12,23 @@ const inventory = ref(10)
 const details = ref(['50% cotton', '30% wool', '20% polyester'])
 
 const variants = ref([
-  {id:2234, color:'green'},
-  {id:2345, color:"blue"}
+  { id: 2234, color: 'green', image: greenSocksImage },
+  { id: 2345, color: "blue", image: blueSocksImage }
 ])
+
+const cart = ref(0)
+// in template it's not necessary to use .value, but in the script part it is.
+const addToCart = () => cart.value += 1
+
+const updateImage = (variantImage: string) => {
+  image.value = variantImage
+}
 
 </script>
 
 <template>
   <div class="nav-bar"></div>
+  <div class="cart">Cart({{ cart }})</div>
   <div class="product-display">
     <div class="product-container">
       <div class="product-image">
@@ -25,7 +36,7 @@ const variants = ref([
         <img v-bind:src=image :alt="alt">
       </div>
       <div class="product-info">
-        <h1>{{ product  }}</h1>
+        <h1>{{ product }}</h1>
         <!-- v-show is to toggle -->
         <p v-show="inStock">Only visible when inStock is true</p>
         <!-- if else case -->
@@ -37,8 +48,15 @@ const variants = ref([
           <li v-for="detail in details">{{ detail }}</li>
         </ul>
         <ul>
-          <li v-for="variant in variants" :key="variant.id">{{ variant.color }}</li>
-        </ul>
+          <li v-for="variant in variants" :key="variant.id" @mouseover="updateImage(variant.image)">
+            {{ variant.color }}</li>
+          </ul>
+            
+            <!-- To listen events on an element and trigger an event, we can use v-on -->
+        <button class="button" v-on:click="addToCart()">Add to Cart</button>
+        <!-- You can also use @click -->
+        <!-- <button class="button" @click="cart += 1">Add to Cart</button> -->
+
       </div>
     </div>
   </div>

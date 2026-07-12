@@ -14,16 +14,46 @@
 
       <router-link to="/lesson2" class="card">
         <h2>Lesson 2</h2>
-        <p>Image + v-bind</p>
+        <p>Image + bind</p>
       </router-link>
 
       <router-link to="/lesson3" class="card">
         <h2>Lesson 3</h2>
-        <p>Image + v-bind</p>
+        <p>Show + if + else</p>
       </router-link>
 
       <router-link to="/lesson4" class="card">
         <h2>Lesson 4</h2>
+        <p>For Loops</p>
+      </router-link>
+
+      <router-link to="/lesson5" class="card">
+        <h2>Lesson 5</h2>
+        <p>on click + image change on hover</p>
+      </router-link>
+
+      <router-link to="/lesson6" class="card">
+        <h2>Lesson 6</h2>
+        <p>Class + style bindings</p>
+      </router-link>
+
+      <router-link to="/lesson7" class="card">
+        <h2>Lesson 7</h2>
+        <p>Computed Properties</p>
+      </router-link>
+
+      <router-link to="/lesson8" class="card">
+        <h2>Lesson 8</h2>
+        <p>Image + v-bind</p>
+      </router-link>
+
+      <router-link to="/lesson9" class="card">
+        <h2>Lesson 9</h2>
+        <p>Components & Props</p>
+      </router-link>
+
+      <router-link to="/lesson10" class="card">
+        <h2>Lesson 10</h2>
         <p>Image + v-bind</p>
       </router-link>
 

@@ -3,7 +3,7 @@
 
 <template>
   <section class="lesson">
-    <h1>Next Lesson</h1>
+    <h1>Next Lessons</h1>
     <p>Coming up — follow the tutorial and add code here.</p>
     <router-link to="/">← Back to Home</router-link>
   </section>

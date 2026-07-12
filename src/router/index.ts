@@ -10,22 +10,52 @@ export const router = createRouter({
     },
     {
       path: '/lesson1',
-      name: 'socks',
+      name: 'lesson1',
       component: () => import('@/views/Lesson1.vue'),
     },
     {
       path: '/lesson2',
-      name: 'image',
+      name: 'lesson2',
       component: () => import('@/views/Lesson2.vue'),
     },
     {
       path: '/lesson3',
-      name: 'other1',
+      name: 'lesson3',
       component: () => import('@/views/Lesson3.vue'),
     },
     {
       path: '/lesson4',
-      name: 'other2',
+      name: 'lesson4',
+      component: () => import('@/views/Lesson4.vue'),
+    },
+    {
+      path: '/lesson5',
+      name: 'lesson5',
+      component: () => import('@/views/Lesson5.vue'),
+    },
+    {
+      path: '/lesson6',
+      name: 'lesson6',
+      component: () => import('@/views/Lesson6.vue'),
+    },
+    {
+      path: '/lesson7',
+      name: 'lesson7',
+      component: () => import('@/views/Lesson7.vue'),
+    },
+    {
+      path: '/lesson8',
+      name: 'lesson8',
+      component: () => import('@/views/Lesson8.vue'),
+    },
+    {
+      path: '/lesson9',
+      name: 'lesson9',
+      component: () => import('@/views/Lesson8.vue'),
+    },
+    {
+      path: '/lesson10',
+      name: 'lesson10',
       component: () => import('@/views/Lesson4.vue'),
     },
     {
