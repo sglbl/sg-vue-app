@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import TopBar from '@/components/TopBar.vue';
 import ProductDisplay from '@/components/ProductDisplay.vue';
 
 const cart = ref<number[]>([])
@@ -12,7 +13,7 @@ const updateCart = (id: number) => {
 </script>
 
 <template>
-  <div class="nav-bar"></div>
+  <TopBar />
   <div class="cart">Cart({{ cart.length }})</div>
   <ProductDisplay :premium="premium" @add-to-cart="updateCart"></ProductDisplay>
 </template>

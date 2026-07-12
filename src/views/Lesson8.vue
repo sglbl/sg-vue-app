@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import TopBar from '@/components/TopBar.vue';
 import greenSocksImage from '../assets/images/socks_green.jpeg'
 import blueSocksImage from '../assets/images/socks_blue.jpeg'
 
@@ -41,7 +42,7 @@ const activeClassForButton = true
 </script>
 
 <template>
-  <div class="nav-bar"></div>
+  <TopBar />
   <div class="cart">Cart({{ cart }})</div>
   <div class="product-display">
     <div class="product-container">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import TopBar from '@/components/TopBar.vue';
 import socksGreenImage from '../assets/images/socks_green.jpeg'
 const product = ref("Socks")
 const image = ref(socksGreenImage)
@@ -9,7 +10,7 @@ const inventory = ref(10)
 </script>
 
 <template>
-  <div class="nav-bar"></div>
+  <TopBar />
   <div class="product-display">
     <div class="product-container">
       <div class="product-image">
