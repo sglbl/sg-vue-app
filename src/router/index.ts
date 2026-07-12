@@ -56,7 +56,12 @@ export const router = createRouter({
     {
       path: '/lesson10',
       name: 'lesson10',
-      component: () => import('@/views/Lesson4.vue'),
+      component: () => import('@/views/Lesson10.vue'),
+    },
+    {
+      path: '/lesson11',
+      name: 'lesson11',
+      component: () => import('@/views/Lesson11.vue'),
     },
     {
       path: '/next-lesson',

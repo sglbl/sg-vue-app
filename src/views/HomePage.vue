@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// lang="ts" would help on type checks.
 </script>
 
 <template>
@@ -54,7 +55,12 @@
 
       <router-link to="/lesson10" class="card">
         <h2>Lesson 10</h2>
-        <p>Image + v-bind</p>
+        <p>Communicating Events + Emit</p>
+      </router-link>
+
+      <router-link to="/lesson11" class="card">
+        <h2>Lesson 11</h2>
+        <p>Forms + Two-way Binding + Modifiers + Types</p>
       </router-link>
 
       <router-link to="/next-lesson" class="card">

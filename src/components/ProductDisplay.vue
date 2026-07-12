@@ -2,6 +2,9 @@
 import { ref, computed } from 'vue';
 import greenSocksImage from '../assets/images/socks_green.jpeg'
 import blueSocksImage from '../assets/images/socks_blue.jpeg'
+import ReviewList from './ReviewList.vue';
+import ReviewForm from './ReviewForm.vue';
+import type { Review } from '@/types/Review.ts';
 
 const props = defineProps({
     premium: {
@@ -10,8 +13,19 @@ const props = defineProps({
     }
 })
 
+// Use 'emit' to say that event happened
+
+const emit = defineEmits(['add-to-cart'])
+
+const addToCart = () => {
+    // id show the payload of the event that we are emitting
+    emit('add-to-cart', variants.value[selectedVariant.value]?.id)
+}
+
 const product = ref("Socks")
 const brand = ref("Karbol")
+
+const reviews = ref<Review[]>([])
 
 const title = computed(() => {
   return brand.value + ' ' + product.value
@@ -26,9 +40,6 @@ const variants = ref([
   { id: 2234, color: 'green', image: greenSocksImage, quantity: 50 },
   { id: 2345, color: "blue", image: blueSocksImage, quantity: 0 }
 ])
-
-// in template it's not necessary to use .value, but in the script part it is.
-const addToCart = () => cart.value += 1
 
 const image = computed(() => {
   return variants.value[selectedVariant.value]?.image
@@ -49,6 +60,10 @@ const shipping = computed(() => {
 
 const updateVariant = (index: any) => {
   selectedVariant.value = index
+}
+
+const addReview = (review: Review) => {
+  reviews.value.push(review)
 }
 
 const activeClassForButton = true
@@ -85,5 +100,7 @@ const activeClassForButton = true
 
       </div>
     </div>
+    <ReviewList v-if="reviews.length > 0" :reviews="reviews"></ReviewList>
+    <ReviewForm @review-submitted="addReview"></ReviewForm>
   </div>
 </template>

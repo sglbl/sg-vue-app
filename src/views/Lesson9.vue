@@ -9,6 +9,6 @@ const premium = ref(true)
 
 <template>
   <div class="nav-bar"></div>
-  <div class="cart">Cart({{ cart }})</div>
+  <div class="cart">Cart not working after separating with Product Display({{ cart }})</div>
   <ProductDisplay :premium="premium"></ProductDisplay>
 </template>
