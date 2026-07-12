@@ -15,6 +15,7 @@ export const router = createRouter({
     { path: '/lesson9', name: 'lesson9', component: () => import('@/views/Lesson9.vue') },
     { path: '/lesson10', name: 'lesson10', component: () => import('@/views/Lesson10.vue') },
     { path: '/lesson11', name: 'lesson11', component: () => import('@/views/Lesson11.vue') },
+    { path: '/lesson12', name: 'lesson12', component: () => import('@/views/Lesson12.vue') },
     { path: '/next-lesson', name: 'next-lesson', component: () => import('@/views/NextLessonPage.vue') },
   ],
 

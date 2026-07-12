@@ -63,6 +63,11 @@
         <p>Forms + Two-way Binding + Modifiers + Types</p>
       </router-link>
 
+      <router-link to="/lesson12" class="card">
+        <h2>Lesson 12</h2>
+        <p>Pinia Store</p>
+      </router-link>
+
       <router-link to="/next-lesson" class="card">
         <h2>Next lesson</h2>
         <p>Trial</p>

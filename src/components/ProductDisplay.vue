@@ -4,6 +4,7 @@ import greenSocksImage from '../assets/images/socks_green.jpeg'
 import blueSocksImage from '../assets/images/socks_blue.jpeg'
 import ReviewList from './ReviewList.vue';
 import ReviewForm from './ReviewForm.vue';
+import { useReviewsStore } from '@/stores/reviews.ts';
 import type { Review } from '@/types/Review.ts';
 
 const props = defineProps({
@@ -25,7 +26,15 @@ const addToCart = () => {
 const product = ref("Socks")
 const brand = ref("Karbol")
 
-const reviews = ref<Review[]>([])
+// const reviews = ref<Review[]>([]) // OLD
+// const addReview = (review: Review) => {
+//   reviews.value.push(review)
+// }
+
+const reviewsStore = useReviewsStore()
+const addReview = (review: Review) => {
+  reviewsStore.addReview(review)
+}
 
 const title = computed(() => {
   return brand.value + ' ' + product.value
@@ -62,9 +71,6 @@ const updateVariant = (index: any) => {
   selectedVariant.value = index
 }
 
-const addReview = (review: Review) => {
-  reviews.value.push(review)
-}
 
 const activeClassForButton = true
 
@@ -100,7 +106,8 @@ const activeClassForButton = true
 
       </div>
     </div>
-    <ReviewList v-if="reviews.length > 0" :reviews="reviews"></ReviewList>
+    <!-- <ReviewList v-if="reviews.length > 0" :reviews="reviews"></ReviewList> -->
+    <ReviewList v-if="reviewsStore.reviews.length > 0" :reviews="reviewsStore.reviews"></ReviewList>
     <ReviewForm @review-submitted="addReview"></ReviewForm>
   </div>
 </template>
