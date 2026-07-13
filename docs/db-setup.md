@@ -130,6 +130,30 @@ every migration in order (including the bundled RLS from `srtd build`), so
 after a reset your local DB has tables + RLS + GRANTs in sync with the
 schema and templates.
 
+#### When to use `supabase migration up` instead
+
+| Command | What it does | Use when |
+|---|---|---|
+| `supabase db reset` | Drops DB, replays every migration from scratch | **Before pushing to cloud** — verifies the whole chain is replayable |
+| `supabase migration up` | Applies only the pending migrations, keeps existing data | Mid-dev iteration when you've added one new migration and don't want to wipe local data |
+| `supabase start` | First boot — auto-runs `migration up` for you | First time, after `supabase init` |
+
+If you only run `supabase migration up`, you skip the canary check. Use it
+for fast iteration; switch to `db reset` before any push.
+
+#### Rolling back
+
+To rewind local to a specific migration:
+
+```bash
+supabase db reset --version <timestamp>
+```
+
+This drops + replays everything up to and including that timestamp. Useful
+when a migration is broken mid-dev. **Never** roll back a version that's
+already deployed to cloud — instead, write a forward migration that reverts
+the change.
+
 During development, prefer `srtd watch --json` in the background so the
 RLS template re-applies automatically when you save changes.
 
@@ -264,3 +288,28 @@ declare module '*.vue' {
   export default component
 }
 ```
+
+---
+
+## Appendix — what declarative schemas DON'T capture
+
+The `supabase db diff` generator has known blind spots. Schema files don't
+describe these — they're managed through other tools or hand-written
+migrations:
+
+| Not captured | Owned by |
+|---|---|
+| DML (`INSERT`, `UPDATE`, `DELETE`) | hand-written migrations, never schemas |
+| RLS policies (only `CREATE POLICY`; `ALTER POLICY` not tracked) | **srtd templates** — that's why we have the split |
+| View ownership / grants, `security invoker`, materialized views | hand-written migrations |
+| Column-level privileges | hand-written migrations |
+| Comments (`COMMENT ON ...`) | hand-written migrations |
+| Partitioned tables (`PARTITION BY`) | hand-written migrations |
+| `ALTER PUBLICATION ... ADD TABLE ...` | hand-written migrations |
+| `CREATE DOMAIN` | hand-written migrations |
+
+If you find yourself needing one of these, **don't** try to coerce it into
+`supabase/schemas/*.sql` — put it where the corresponding tool can own it,
+or write a hand-written migration for it (and update
+[.claude/rules/migrations.md](../.claude/rules/migrations.md) if the
+exception is intentional).
