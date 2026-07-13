@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import greenSocksImage from '../assets/images/socks_green.jpeg'
 import blueSocksImage from '../assets/images/socks_blue.jpeg'
 import ReviewList from './ReviewList.vue';
 import ReviewForm from './ReviewForm.vue';
 import { useCloudReviewsStore } from '@/stores/cloudReviews';
-import type { Review } from '@/types/Review.ts';
 
 const props = defineProps({
     premium: {
@@ -19,6 +18,11 @@ const props = defineProps({
 })
 
 const reviewsStore = useCloudReviewsStore()
+
+// Pull existing reviews from Supabase on mount — the cloud store starts empty
+onMounted(() => {
+  reviewsStore.fetchReviews()
+})
 
 // Use 'emit' to say that event happened
 const emit = defineEmits(['add-to-cart'])

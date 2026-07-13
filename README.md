@@ -42,7 +42,7 @@ Two committed env files, picked automatically by Vite mode:
 To verify against cloud during dev:
 
 ```sh
-npm run dev --mode prod
+npm run dev:prod
 ```
 
 ## Scripts
@@ -50,6 +50,7 @@ npm run dev --mode prod
 | Script | What |
 |---|---|
 | `npm run dev` | Vite dev server, mode `dev` → loads `.env.dev` |
+| `npm run dev:prod` | Vite dev server, mode `prod` → loads `.env.prod` (cloud) |
 | `npm run build` | Type-check + production build, mode `prod` → loads `.env.prod` |
 | `npm run preview` | Serve the built output locally |
 

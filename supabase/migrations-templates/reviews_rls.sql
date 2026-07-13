@@ -1,5 +1,9 @@
 -- (no dependencies for now)
 
+-- Without this, CREATE POLICY statements are stored but never enforced.
+-- The table is created with RLS off by default in Postgres.
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+
 DROP POLICY IF EXISTS "Anyone can read reviews" ON public.reviews;
 CREATE POLICY "Anyone can read reviews"
 ON public.reviews

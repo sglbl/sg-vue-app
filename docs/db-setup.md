@@ -1,4 +1,4 @@
-# Lesson 13 — Database setup with Supabase + srtd
+# Database setup with Supabase + srtd
 
 How to wire `ProductDisplayCloud.vue` + `useCloudReviewsStore` to a real Supabase backend, and how to ship migrations between local Docker and your cloud project.
 
@@ -54,12 +54,35 @@ Generate the migration:
 supabase db diff -f create_reviews_table
 ```
 
+> ⚠️ **`supabase db diff` does not emit DML grants.** The generated migration
+> will only grant `MAINTAIN`, `REFERENCES`, `TRIGGER`, `TRUNCATE` to each role —
+> no `SELECT` or `INSERT`. Without explicit DML grants, anon gets 401 even
+> with valid RLS policies. The fix is to **declare them in the schema** so the
+> next `db diff` picks them up:
+>
+> ```sql
+> GRANT SELECT, INSERT ON public.reviews TO anon;
+> GRANT SELECT, INSERT, UPDATE, DELETE ON public.reviews TO authenticated;
+> ```
+>
+> Then `supabase db diff -f fix_reviews_grants` regenerates the migration
+> with proper GRANTs. **Never** hand-write a migration — see [.claude/AGENTS.md](../.claude/AGENTS.md) for the source-of-truth rules.
+>
+> The diff will also emit false-positive `DROP POLICY` statements (it doesn't
+> know policies are srtd-owned). Remove those lines from the generated file
+> with a comment — they're tool output, not source-of-truth edits.
+
 ### 1.4 Create RLS policies — srtd template
 
 Create `supabase/migrations-templates/reviews_rls.sql`:
 
 ```sql
 -- (no dependencies for now)
+
+-- Without this, CREATE POLICY statements are stored but never enforced.
+-- Postgres creates tables with RLS off by default — Studio will show
+-- "unrestricted" even though policies exist.
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can read reviews" ON public.reviews;
 CREATE POLICY "Anyone can read reviews"
@@ -92,41 +115,89 @@ errors with "table or view does not exist", you skipped the reset.
 During development, prefer `srtd watch --json` in the background so the
 RLS template re-applies automatically when you save changes.
 
-### 1.5 Bundle + push to remote
+### 1.5 Apply locally
 
-Two commands — `srtd build` first, then `supabase db push`. **Don't skip
-`srtd build`**: without it, `supabase/migrations/` only has your schema
-diff, the cloud DB gets the table but no RLS, and PostgREST returns
-401/403 to anon.
+After the schema and srtd templates are in place, generate migrations
+and replay them on the **local DB**:
 
 ```bash
-srtd build             # bundles RLS templates into supabase/migrations/*.sql
-supabase db push       # pushes ALL pending migrations to cloud
+srtd build                     # bundles RLS templates into supabase/migrations/*.sql
+supabase db reset              # drops & replays all of supabase/migrations/*.sql locally
 ```
 
-Local dev only ever needs `srtd apply` / `srtd watch` — `build` is what
-packages templates into migration files for the cloud to consume.
+`supabase db reset` is **local only** — it does not touch cloud. It replays
+every migration in order (including the bundled RLS from `srtd build`), so
+after a reset your local DB has tables + RLS + GRANTs in sync with the
+schema and templates.
+
+During development, prefer `srtd watch --json` in the background so the
+RLS template re-applies automatically when you save changes.
+
+### 1.6 Push to cloud
+
+When the local setup is verified, ship the same migrations to **cloud**:
+
+```bash
+supabase db push               # pushes ALL pending migrations to cloud
+```
+
+`supabase db push` is **cloud only** — it does not touch local. After a
+push, your local DB is still in its pre-push state. Run `supabase db reset`
+to mirror cloud locally.
 
 > The "failed to cache migrations catalog / pgdelta-target-ca.crt" warning
 > at the end of `supabase db push` is harmless — the push completes. It's
 > a known issue with the pg-delta migration cache, not the apply itself.
 
-### 1.6 Verify it worked
+### 1.7 Local vs cloud at a glance
 
-In the Supabase dashboard:
+The two databases are **independent**. Both `supabase db reset` and
+`supabase db push` read from the same `supabase/migrations/` folder, but
+write to different DBs.
+
+| Command | Touches | When to run |
+|---|---|---|
+| `supabase db diff -f <name>` | None (generates files) | After `supabase/schemas/*.sql` changes |
+| `srtd build` | None (generates files) | After `supabase/migrations-templates/*.sql` changes |
+| `supabase db reset` | **Local DB** | After any new migration lands — verifies clean replay |
+| `supabase db push` | **Cloud DB** | When ready to ship verified migrations |
+| `srtd apply` | **Local DB** | Fast-apply during dev (skips the full reset) |
+| `srtd watch --json` | **Local DB** | Live reload RLS changes during dev |
+
+Typical loop after a schema or template change:
+
+```bash
+supabase db reset     # local: replay + verify
+supabase db push      # cloud: ship the same migrations
+```
+
+- If you only run `supabase db push`, **cloud** updates but **local** stays stale.
+- If you only run `supabase db reset`, **local** updates but **cloud** stays stale.
+
+**The two commands do not touch each other.** After any change to `supabase/migrations/`, run both to keep them in sync.
+
+### 1.8 Verify both
+
+**Local DB** — Supabase Studio at `http://127.0.0.1:54323`:
 - **Table Editor** → `reviews` table exists with the 5 columns
 - **Authentication → Policies** → both policies listed
 - **SQL Editor** → run `select count(*) from public.reviews;` → returns `0`
 
-From your app (lesson 13 view):
-- Submit a review → check Table Editor → row appears
-- Refresh page → review still there (came from `select`)
-- Open in a different browser/incognito → review still there (cloud, not local)
+**Cloud DB** — Dashboard at `https://supabase.com/dashboard/project/<ref>`:
+- Same three checks as local
 
-If the table exists but policies are missing, you skipped `srtd build`
-between §1.4 and §1.5 — run it now and `supabase db push` again.
+From your app:
+- `npm run dev` → submits/reviews hit **local**
+- `npm run dev:prod` → submits/reviews hit **cloud**
+- Submit a review → row appears in the matching DB
 
-### 1.7 Frontend env vars
+If the table exists on cloud but policies are missing, you skipped
+`srtd build` between §1.4 and §1.6 — run it now and `supabase db push` again.
+
+If `npm run dev` returns 401 from local PostgREST but `npm run dev:prod`
+works against cloud, your local DB is stale — run `supabase db reset`.
+
+### 1.9 Frontend env vars
 
 Use Vite's mode system so you never have to swap URLs by hand.
 
@@ -155,7 +226,7 @@ VITE_SUPABASE_ANON_KEY=sb_publishable_...
 
 To verify against cloud during dev without rebuilding:
 ```bash
-npm run dev --mode prod
+npm run dev:prod
 ```
 
 Local values come from `supabase status` (Project URL + Publishable key).
