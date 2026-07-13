@@ -1,5 +1,11 @@
 {
   "version": "1.0",
-  "lastTimestamp": "",
-  "templates": {}
+  "lastTimestamp": "20260713075737",
+  "templates": {
+    "supabase/migrations-templates/reviews_rls.sql": {
+      "lastBuildHash": "d601901d516e86abaa5f75da81ee8d7a",
+      "lastBuildDate": "2026-07-13T07:57:37.190Z",
+      "lastMigrationFile": "20260713075737_srtd-reviews_rls.sql"
+    }
+  }
 }
