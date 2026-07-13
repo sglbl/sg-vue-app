@@ -1,6 +1,6 @@
 # Lesson 13 — Cloud reviews with Supabase
 
-How to wire `ProductDisplayCloud.vue` + `useCloudReviewsStore` to a real Supabase backend, and how to start practicing the `.claude/` documentation pattern on this small project.
+How to wire `ProductDisplayCloud.vue` + `useCloudReviewsStore` to a real Supabase backend.
 
 > Status: do this tomorrow. All commands assume you've already created a Supabase project at [supabase.com](https://supabase.com).
 
@@ -164,81 +164,6 @@ declare module '*.vue' {
 
 ---
 
-## Part 2 — Document this in `.claude/`
-
-You're already using the `.claude/` tier system well. Add three small files to round it out.
-
-### 2.1 Expand [AGENTS.md](../.claude/AGENTS.md)
-
-Add a frontend section alongside the existing supabase/srtd/declarative-schemas note:
-
-```markdown
-## Frontend
-- **Vue 3 + Vite + TypeScript** in `src/`
-- **Pinia** for state — Composition API style only (`defineStore('id', () => {...}, { persist })`)
-- **@supabase/supabase-js** for the cloud backend (lesson 13+)
-- **No Options API anywhere.** Components, stores — all Composition API.
-- Stores live in `src/stores/`, components in `src/components/`, views in `src/views/`.
-```
-
-### 2.2 New [rules/vue.md](../.claude/rules/vue.md)
-
-Conditional rule that auto-loads when you touch Vue/TS files:
-
-```markdown
----
-paths:
-  - "src/**/*.vue"
-  - "src/**/*.ts"
----
-
-# Vue / Frontend rules
-
-- Always `<script setup lang="ts">` — never plain `<script>`.
-- Composition API only — never Options API.
-- Pinia stores: Composition API style (`defineStore('id', setupFn, options)`).
-- For Supabase: alias destructured errors (`const { error: err } = ...`) to avoid shadowing refs.
-- Persist flag goes in the 3rd arg of `defineStore`, not inside the setup function.
-```
-
-### 2.3 New [skills/review-feature/SKILL.md](../.claude/skills/review-feature/SKILL.md)
-
-Invokable skill for anything review-related:
-
-```markdown
----
-name: review-feature
-description: This skill should be used when the user asks about reviews, the review form, ReviewList/ReviewForm components, the reviews store, or persisting reviews (localStorage or Supabase). Triggers on "review", "reviews", "ReviewForm", "ReviewList", "review persistence".
----
-
-# Review feature context
-
-Two backends coexist in this tutorial:
-- **Lessons 11–12**: Pinia store `useReviewsStore` + `persist: true` → localStorage
-- **Lesson 13**: Pinia store `useCloudReviewsStore` → Supabase `reviews` table
-
-Components:
-- `src/components/ReviewForm.vue` — emits `review-submitted`
-- `src/components/ReviewList.vue` — takes `reviews` prop
-- `src/components/ProductDisplay.vue` — localStorage variant (lessons 11–12)
-- `src/components/ProductDisplayCloud.vue` — Supabase variant (lesson 13)
-
-Type: `src/types/Review.ts`
-```
-
----
-
-## Quick reference — what each tier is for
-
-| File | Tier | Loads when |
-|---|---|---|
-| `.claude/AGENTS.md` | Project rules | Every session |
-| `.claude/rules/*.md` | Conditional rules | When the `paths:` glob matches the file being edited |
-| `.claude/skills/*/SKILL.md` | Invokable skills | Triggered by name or by the `description:` matching your request |
-| `.claude/settings.json` | Permissions | Always (tool allowlist) |
-
----
-
 ## Tomorrow's checklist
 
 Run top to bottom, in order — don't skip the reset:
@@ -249,6 +174,3 @@ Run top to bottom, in order — don't skip the reset:
 - [ ] §1.5 — `supabase db push` (only after reset + apply are both clean locally)
 - [ ] §1.6 — verify from dashboard + app
 - [ ] §1.7 — `.env.development` (local) + `.env.production` (cloud) + `env.d.ts`
-- [ ] §2.1 — update AGENTS.md
-- [ ] §2.2 — add rules/vue.md
-- [ ] §2.3 — add skills/review-feature/SKILL.md
