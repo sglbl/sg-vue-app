@@ -1,19 +1,22 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 import type { Review } from '@/types/Review.ts'
 
-export const useReviewsStore = defineStore('reviews', {
-  state: () => ({
-    reviews: [] as Review[]
-  }),
-  actions: {
-    addReview(review: Review) {
-      this.reviews.push(review)
-    }
-  },
-  // what pinia-plugin-persistedstate looks for (to save to localStorage)
-  persist: true  
-})
+export const useReviewsStore = defineStore('reviews', () => {
+  // state
+  const reviews = ref<Review[]>([])
 
+  // actions
+  function addReview(review: Review) {
+    reviews.value.push(review)
+  }
+
+  // expose to consumers
+  return { reviews, addReview }
+}, {
+  persist: true   // what pinia-plugin-persistedstate looks for (to save to localStorage)
+
+})
 
 /*
 Local storage and Cookies are not the same.

@@ -68,6 +68,11 @@
         <p>Pinia Store</p>
       </router-link>
 
+      <router-link to="/lesson13" class="card">
+        <h2>Lesson 13</h2>
+        <p>Supabase Store</p>
+      </router-link>
+
       <router-link to="/next-lesson" class="card">
         <h2>Next lesson</h2>
         <p>Trial</p>
