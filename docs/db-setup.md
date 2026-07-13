@@ -157,7 +157,37 @@ the change.
 During development, prefer `srtd watch --json` in the background so the
 RLS template re-applies automatically when you save changes.
 
-### 1.6 Push to cloud
+### 1.6 Regenerate TypeScript types
+
+`supabase/database.types.ts` is **generated**, not hand-written — it mirrors
+the current DB schema. Re-run the generator after any change to
+`supabase/schemas/*.sql` or `supabase/migrations-templates/*.sql` lands:
+
+```bash
+npx supabase gen types typescript --local > supabase/database.types.ts
+```
+
+Run it against the matching target:
+- `--local` → regenerates from your local Docker DB
+- `--linked` → regenerates from cloud (run after `supabase db push`)
+
+The generated file exposes a `Tables<'reviews'>` helper and a top-level
+`Database` type. Consumers either alias it locally:
+
+```ts
+import type { Tables } from '@db/database.types.ts'
+type Review = Tables<'reviews'>
+```
+
+…or pass `Database` straight to `createClient<Database>` in
+[src/lib/supabase.ts](../src/lib/supabase.ts) for full type inference on
+every `.from()` call.
+
+> ⚠️ Don't hand-edit `database.types.ts` — the next regeneration will
+> silently overwrite your changes. Treat it like `package-lock.json`:
+> committed, but only touched by tooling.
+
+### 1.7 Push to cloud
 
 When the local setup is verified, ship the same migrations to **cloud**:
 
@@ -173,7 +203,7 @@ to mirror cloud locally.
 > at the end of `supabase db push` is harmless — the push completes. It's
 > a known issue with the pg-delta migration cache, not the apply itself.
 
-### 1.7 Local vs cloud at a glance
+### 1.8 Local vs cloud at a glance
 
 The two databases are **independent**. Both `supabase db reset` and
 `supabase db push` read from the same `supabase/migrations/` folder, but
@@ -200,7 +230,7 @@ supabase db push      # cloud: ship the same migrations
 
 **The two commands do not touch each other.** After any change to `supabase/migrations/`, run both to keep them in sync.
 
-### 1.8 Verify both
+### 1.9 Verify both
 
 **Local DB** — Supabase Studio at `http://127.0.0.1:54323`:
 - **Table Editor** → `reviews` table exists with the 5 columns
@@ -216,12 +246,12 @@ From your app:
 - Submit a review → row appears in the matching DB
 
 If the table exists on cloud but policies are missing, you skipped
-`srtd build` between §1.4 and §1.6 — run it now and `supabase db push` again.
+`srtd build` between §1.4 and §1.7 — run it now and `supabase db push` again.
 
 If `npm run dev` returns 401 from local PostgREST but `npm run dev:prod`
 works against cloud, your local DB is stale — run `supabase db reset`.
 
-### 1.9 Frontend env vars
+### 1.10 Frontend env vars
 
 Use Vite's mode system so you never have to swap URLs by hand.
 

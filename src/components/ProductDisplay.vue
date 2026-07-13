@@ -5,7 +5,8 @@ import blueSocksImage from '../assets/images/socks_blue.jpeg'
 import ReviewList from './ReviewList.vue';
 import ReviewForm from './ReviewForm.vue';
 import { useReviewsStore } from '@/stores/reviews.ts';
-import type { Review } from '@/types/Review.ts';
+import type { Tables } from '@db/database.types.ts';
+type Review = Tables<'reviews'>;
 
 const props = defineProps({
     premium: {
