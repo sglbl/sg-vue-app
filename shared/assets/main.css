@@ -79,6 +79,8 @@ li {
   font-size: 18px;
 }
 
+/* ===== TopBar ===== */
+
 .nav-bar {
   background: linear-gradient(-90deg, #84cf6a, #16c0b0);
   height: 60px;
@@ -86,7 +88,49 @@ li {
   -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.57);
+
+  /* ← add these two lines */
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
 }
+.nav-bar a {
+  color: white;
+  text-decoration: none;
+  padding: 0.4rem 1rem;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 999px;        /* fully rounded */
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.15s ease;
+}
+
+.nav-bar a:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.nav-bar a.router-link-active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+
+.nav-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  font: inherit;
+  font-size: 16px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.nav-button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
 
 .out-of-stock-img {
   opacity: 0.5;
@@ -180,3 +224,33 @@ ul {
     width: 90%;
   }
 }
+
+/* Layout helpers used by both apps */
+.home {
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  width: 220px;
+  transition: transform .1s, box-shadow .1s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.card h2 { margin: 0 0 0.5rem; }
+.card p  { margin: 0; color: #555; }
