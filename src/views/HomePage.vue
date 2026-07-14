@@ -65,13 +65,18 @@
 
       <router-link to="/lesson12" class="card">
         <h2>Lesson 12</h2>
-        <p>Pinia Store</p>
+        <p>Pinia Local Store</p>
       </router-link>
 
       <router-link to="/lesson13" class="card">
         <h2>Lesson 13</h2>
-        <p>Supabase Store</p>
+        <p>Pinia Supabase Store</p>
       </router-link>
+
+      <div class="card" @click="handleClick">
+        <h2>Lesson 14</h2>
+        <p>Run the <code>sg-nuxt-app</code></p>
+      </div>
 
       <router-link to="/next-lesson" class="card">
         <h2>Next lesson</h2>

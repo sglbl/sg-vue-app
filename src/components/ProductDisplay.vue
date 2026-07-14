@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import greenSocksImage from '../assets/images/socks_green.jpeg'
-import blueSocksImage from '../assets/images/socks_blue.jpeg'
-import ReviewList from './ReviewList.vue';
-import ReviewForm from './ReviewForm.vue';
+import greenSocksImage from '@shared/assets/images/socks_green.jpeg'
+import blueSocksImage from '@shared/assets/images/socks_blue.jpeg'
+import ReviewList from '@shared/components/ReviewList.vue';
+import ReviewForm from '@shared/components/ReviewForm.vue';
 import { useReviewsStore } from '@/stores/reviews.ts';
 import type { Tables } from '@db/database.types.ts';
 type Review = Tables<'reviews'>;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import TopBar from '@/components/TopBar.vue';
+import TopBar from '@shared/components/TopBar.vue';
 import ProductDisplay from '@/components/ProductDisplay.vue';
 
 const cart = ref(0)

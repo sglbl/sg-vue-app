@@ -1,8 +1,9 @@
-// sg-nuxt-app/nuxt.config.ts
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
+// Project root = parent of sg-nuxt-app (so @shared/ points outside it)
+const projectRoot = resolve(here, '..')
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -13,14 +14,33 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  // Mirror sg-vue-app's `@db` → supabase/database.types.ts alias
   alias: {
-    '@db': resolve(here, 'supabase/database.types.ts'),
+    '@db':      resolve(projectRoot, 'supabase'),         // directory
+    '@shared':  resolve(projectRoot, 'shared'),           // directory
   },
 
-  // Don't redirect on auth changes yet — we don't have login
+  // Auto-import shared components with no prefix → <TopBar />, <ReviewList />, <ReviewForm />
+  components: [
+    { path: '@shared/components', pathPrefix: false },
+  ],
+
+  // Global CSS — applied to every page
+  css: [
+    resolve(projectRoot, 'shared/assets/main.css'),
+  ],
+
   supabase: {
-    types: '~~/supabase/database.types',
+    types: resolve(projectRoot, 'supabase/database.types'),
     redirect: false,
   },
+
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+      ]
+    }
+  }
+  
 })

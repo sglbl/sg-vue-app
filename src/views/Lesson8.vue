@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import TopBar from '@/components/TopBar.vue';
-import greenSocksImage from '../assets/images/socks_green.jpeg'
-import blueSocksImage from '../assets/images/socks_blue.jpeg'
+import TopBar from '@shared/components/TopBar.vue';
+import greenSocksImage from '@shared/assets/images/socks_green.jpeg'
+import blueSocksImage from '@shared/assets/images/socks_blue.jpeg'
 
 const product = ref("Socks")
 const brand = ref("Karbol")

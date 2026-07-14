@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import TopBar from '@/components/TopBar.vue';
+import TopBar from '@shared/components/TopBar.vue';
 // Ref (reactive state): a special variable that lets Vue know when it changes
 const product = ref("Socks")
 </script>

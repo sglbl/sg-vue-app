@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "shared/**/*", "shared/**/*.vue"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     // Extra safety for array and object lookups, but may have false positives.
@@ -8,8 +8,9 @@
 
     // Path mapping for cleaner imports.
     "paths": {
-      "@/*": ["./src/*"],
-      "@db/*": ["./supabase/*"]
+      "@/*":       ["./src/*"],
+      "@shared/*": ["./shared/*"],
+      "@db/*":     ["./supabase/*"]
     },
 
     // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.
