@@ -19,8 +19,13 @@ export default defineNuxtConfig({
     '@shared':  resolve(projectRoot, 'shared'),           // directory
   },
 
-  // Auto-import shared components with no prefix → <TopBar />, <ReviewList />, <ReviewForm />
+  // Auto-import components from BOTH directories with no prefix:
+  //   '~/components'                 → app/components/*.vue     (e.g. <ProductDisplayCloud />)
+  //   '@shared/components'           → shared/components/*.vue  (e.g. <TopBar />, <ReviewList />, <ReviewForm />)
+  // Passing an array *replaces* the Nuxt default — that's why listing only '@shared/components'
+  // made ProductDisplayCloud disappear from auto-imports.
   components: [
+    '~/components',
     { path: '@shared/components', pathPrefix: false },
   ],
 
