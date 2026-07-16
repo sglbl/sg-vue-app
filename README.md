@@ -12,13 +12,25 @@ Two apps, one database, one shared component library.
 
 ## Project structure
 
+**Runtime legend** — read these tags on each folder before anything else:
+
+| Tag | Runtime |
+|---|---|
+| `# CLIENT` | Browser (or Vue's SSR renderer). Shipped to the client. |
+| `# SERVER` | Node.js via Nitro. **Never** shipped to the browser. |
+| `# SHARED` | Reachable from both sides via `@shared` / `@db` aliases. |
+| `# DATA` | Database artifacts (schemas, migrations, generated types). |
+| `# CONFIG` | Build / env configuration. Not part of any runtime. |
+| `# META` / `# DOCS` | Project meta — README, package.json, notes. |
+
 ```bash
 sg-vue-app/
-├── README.md                # you are here
-├── docs/
-│   └── db-setup.md          # Supabase + srtd walkthrough
+├── README.md                # DOCS — you are here
+├── docs/                    # DOCS
+│   ├── db-setup.md          #     Supabase + srtd walkthrough
+│   └── nuxt-structure.md    #     Nuxt file-by-file deep dive
 │
-├── shared/                  # consumed by BOTH apps
+├── shared/                  # SHARED — consumed by BOTH apps (via @shared alias)
 │   ├── assets/
 │   │   ├── images/
 │   │   │   ├── socks_green.jpeg
@@ -29,7 +41,7 @@ sg-vue-app/
 │       ├── ReviewList.vue   # takes reviews via prop
 │       └── ReviewForm.vue   # emits review-submitted event
 │
-├── src/                     # Vue 3 app (Vite SPA)
+├── src/                     # CLIENT — Vue 3 app (Vite SPA)
 │   ├── components/
 │   │   ├── ProductDisplay.vue       # uses useReviewsStore
 │   │   └── ProductDisplayCloud.vue  # uses useCloudReviewsStore + supabase
@@ -40,24 +52,27 @@ sg-vue-app/
 │   └── types/
 │
 ├── sg-nuxt-app/             # Nuxt 4 app (Nitro + Vue 3 SSR)
-│   ├── app/
+│   ├── app/                 # CLIENT — Nuxt UI code shipped to the browser
 │   │   ├── app.vue                    # root layout
 │   │   ├── components/
 │   │   │   └── ProductDisplayCloud.vue  # Nuxt-native (uses useSupabaseClient)
 │   │   └── pages/
 │   │       ├── index.vue
 │   │       └── lesson14.vue
-│   ├── nuxt.config.ts                  # @shared, @db aliases, components block
-│   └── .env                            # SUPABASE_URL + SUPABASE_KEY for the module
+│   ├── server/              # SERVER — Nitro endpoints, never shipped to browser
+│   │   └── api/
+│   │       └── shipping.post.ts          # POST /api/shipping — rate calculator
+│   ├── nuxt.config.ts                  # CONFIG — @shared, @db aliases, components block
+│   └── .env                            # CONFIG — SUPABASE_URL + SUPABASE_KEY for the module
 │
-├── supabase/                # schemas + migrations + generated types
+├── supabase/                # DATA — schemas + migrations + generated types
 │   ├── schemas/reviews.sql
 │   ├── migrations/*.sql
 │   └── database.types.ts              # regenerated via `supabase gen types typescript --local`
 │
-├── index.html, vite.config.ts, tsconfig.app.json
-├── .env.dev, .env.prod               # Vite-style VITE_* env vars
-└── package.json
+├── index.html, vite.config.ts, tsconfig.app.json     # CONFIG
+├── .env.dev, .env.prod                              # CONFIG — Vite-style VITE_* env vars
+└── package.json                                     # META — deps & scripts
 ```
 
 ## Stack

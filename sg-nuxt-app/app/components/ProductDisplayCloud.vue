@@ -15,6 +15,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  country: {
+    type: String,
+    default: 'US'
+  }
 })
 
 // Nuxt-native: client from @nuxtjs/supabase module, no shared import, no Pinia
@@ -63,7 +67,36 @@ const variants = ref([
 
 const image    = computed(() => variants.value[selectedVariant.value]?.image)
 const inStock  = computed(() => (variants.value[selectedVariant.value]?.quantity ?? 0) > 0)
-const shipping = computed(() => (props.premium ? 'Free' : 2.99))
+// OLD - hardcoded on client side
+// const shipping = computed(() => (props.premium ? 'Free' : 2.99))
+
+// NEW - coming from server side
+// useFetch is auto-imported by Nuxt. It runs on the server during SSR
+// (so the page hydrates with the value already filled in) and re-runs
+// on the client whenever a reactive dependency in `body` changes.
+//
+// Passing `body` as a function (not a plain object) is what makes
+// useFetch track props.country and props.premium — change either and
+// the request fires again automatically.
+const {data: shippingInfo, pending, error} = await useFetch('/api/shipping', {
+  method: 'POST',
+  body: computed(() => ({
+    country: props.country,
+    premium: props.premium,
+    subtotal: 0
+  }))
+})
+
+// Pretty-print the shipping line for the template.
+const shippingLabel = computed(() => {
+  if (pending.value)  return 'calculating…'
+  if (error.value)    return 'unavailable'
+  if (!shippingInfo.value) return '-'
+
+  const c = shippingInfo.value.cost
+  const cost = c === 0 ? 'Free' : '$' + c.toFixed(2)
+  return `${cost} (${shippingInfo.value.estimatedDays} days)`
+})
 
 const updateVariant = (index: number) => {
   selectedVariant.value = index
@@ -87,7 +120,7 @@ const activeClassForButton = true
         <h1>{{ title }}</h1>
         <p v-if="inStock">In Stock</p>
         <p v-else>Out of Stock</p>
-        <p>Shipping: {{ shipping }}</p>
+        <p>Shipping: {{ shippingLabel }}</p>
 
         <ul>
           <li v-for="detail in details">{{ detail }}</li>
