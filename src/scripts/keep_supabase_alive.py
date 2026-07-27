@@ -86,6 +86,25 @@ def main() -> bool:
         "REST /reviews in public schema"
     )
 
+    # Insert a row into temp_calls to generate write activity
+    results['Insert temp_call'] = make_request(
+        f"{supabase_url}/rest/v1/temp_calls",
+        supabase_anon_key,
+        "Insert into temp_calls",
+        method="POST",
+        json_data={},
+        valid_statuses=(200, 201, 204)
+    )
+
+    # Delete temp_calls to keep table clean and trigger delete activity
+    results['Delete temp_calls'] = make_request(
+        f"{supabase_url}/rest/v1/temp_calls?id=not.is.null",
+        supabase_anon_key,
+        "Delete from temp_calls",
+        method="DELETE",
+        valid_statuses=(200, 204)
+    )
+
     # GraphQL POST query - This directly hits pg_graphql which executes a db transaction
     results['GraphQL Introspection'] = make_request(
         f"{supabase_url}/graphql/v1",
