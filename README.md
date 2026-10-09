@@ -27,7 +27,7 @@ Two apps, one database, one shared component library.
 sg-vue-app/
 ├── README.md                # DOCS — you are here
 ├── docs/                    # DOCS
-│   ├── db-setup.md          #     Supabase + srtd walkthrough
+│   ├── db-setup.md          #     Supabase declarative schema walkthrough
 │   └── nuxt-structure.md    #     Nuxt file-by-file deep dive
 │
 ├── shared/                  # SHARED — consumed by BOTH apps (via @shared alias)
@@ -85,7 +85,7 @@ sg-vue-app/
 - **Pinia** + `pinia-plugin-persistedstate` (local storage persistence)
 - **Vue Router** (history mode, one route per lesson)
 - **@supabase/supabase-js** (lesson 13 cloud backend)
-- **Supabase CLI** + **srtd** (declarative schemas, migrations, RLS templates)
+- **Supabase CLI** (declarative schemas with pg-delta, migrations, RLS)
 
 ### `sg-nuxt-app/`
 
@@ -115,12 +115,11 @@ For the cloud-backed lesson, also bring up the local Supabase stack
 
 ```sh
 supabase start       # local Postgres + Studio on http://127.0.0.1:54323
-srtd init            # only on first run
 ```
 
 ## Database setup
 
-Full walkthrough — declarative schemas, srtd templates, env vars,
+Full walkthrough — declarative schemas, migrations, env vars,
 `supabase db push` to cloud — lives in [`docs/db-setup.md`](docs/db-setup.md).
 
 The `supabase/` folder is shared by both apps via the `@db` alias.

@@ -39,8 +39,5 @@ __screenshots__/
 *.timestamp-*-*.mjs
 _**
 
-# srtd's local logs should not be committed, as they're per-environment specific
-.srtd.buildlog.local.json
-
 .env**
 !.env.example
