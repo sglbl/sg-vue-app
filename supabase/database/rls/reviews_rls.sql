@@ -4,14 +4,12 @@
 -- The table is created with RLS off by default in Postgres.
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 
-DROP POLICY IF EXISTS "Anyone can read reviews" ON public.reviews;
 CREATE POLICY "Anyone can read reviews"
 ON public.reviews
 FOR SELECT
 TO anon
 USING (true);
 
-DROP POLICY IF EXISTS "Anyone can submit a review" ON public.reviews;
 CREATE POLICY "Anyone can submit a review"
 ON public.reviews
 FOR INSERT
